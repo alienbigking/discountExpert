@@ -1,4 +1,4 @@
-# LittleMemo - 技术规范文档
+# DiscountExpert - 技术规范文档
 
 ## 技术架构
 
@@ -14,18 +14,19 @@
 ```
 src/
 ├── pages/                    # 页面模块
-│   ├── home/                # 主页模块（示例）
-│   │   ├── components/      # UI组件
+│   ├── home/                # 首页（优惠入口列表，唯一业务页面）
+│   │   ├── components/      # UI组件（home / platformFilter / entryList）
 │   │   ├── stores/          # Zustand状态管理
-│   │   ├── services/        # API服务层
+│   │   ├── services/        # 服务层（deeplink 跳转）
 │   │   ├── types/           # TypeScript类型定义
 │   │   └── index.ts         # 模块导出
-│   ├── community/           # 社区模块（遵循相同结构）
-│   └── profile/             # 个人资料模块（遵循相同结构）
+│   └── login/               # 登录/注册模块（遵循相同结构）
 ├── components/              # 共享组件
-│   └── authGate/            # 认证守卫组件（遵循相同模块结构）
-├── navigation/              # 导航配置
-├── services/               # 全局服务层
+│   ├── authRoute/           # 认证守卫组件
+│   ├── appBackground/       # 全局背景色容器
+│   ├── appStatusBar/        # 状态栏组件
+│   └── entryCard/           # 入口卡片组件（核心 UI 组件）
+├── navigation/              # 导航配置（Stack 导航，无 Tab）
 └── utils/                  # 工具函数
 ```
 
@@ -114,9 +115,8 @@ const useStore = create<StoreState>((set, get) => ({
 ```
 
 ### 状态管理模块
-- **homeStore**: 情绪打卡状态、连续打卡统计
-- **communityStore**: 社区帖子数据、用户信息
-- **authGateStore**: 用户认证状态、登录信息
+- **homeStore**: 优惠入口列表、平台筛选、搜索关键词、内置入口数据
+- **authRouteStore**: 用户认证状态、token
 
 ## 组件架构设计
 
@@ -162,13 +162,11 @@ interface CommunityUser {
 
 ### 导航层次结构
 ```typescript
-// 主导航器
+// 主导航器（单 Stack，无 Tab）
 AppNavigator (Stack)
-├── AuthNavigator (Stack) - 认证流程
-└── MainTabNavigator (Tab) - 主应用
-    ├── HomeStack
-    ├── CommunityStack  
-    └── ProfileStack
+├── Home     - 优惠入口列表（默认首页）
+├── Login    - 登录
+└── Register - 注册
 ```
 
 ### 导航配置
@@ -336,15 +334,15 @@ src/components/
     └── index.ts             # 模块主出口
 ```
 
-- 现有共享组件：`authGate/`（认证守卫）、`appBackground/`（全局背景色容器）
-- 组件内部引用使用相对路径，跨模块引用使用 `@/components/appBackground`
+- 现有共享组件：`authRoute/`（认证守卫）、`appBackground/`（背景色容器）、`appStatusBar/`（状态栏）、`entryCard/`（入口卡片）
+- 组件内部引用使用相对路径，跨模块引用使用 `@/components/entryCard`
 
 ### 对应后端项目规范（unbounded.social.be）
 
 前端接口调用必须与后端项目规范严格对齐，开发新接口时需同步参考后端 `llms.txt`。
 
 #### 后端模块目录约定
-后端 `apps/littleMemo/` 下每个模块包含：
+后端 `apps/discountExpert/` 下每个模块包含：
 ```
 {moduleName}/
 ├── routes/         # 路由层（kebab-case 文件名，如 feedback-route.js）
@@ -356,23 +354,21 @@ src/components/
 
 #### 后端接口规范要点（前端必须了解）
 - **响应结构**：`{ status, code, data, message }`，`status === 0` 成功，`status !== 0` 业务失败
-- **消息常量**：后端每个模块都有对应消息文件 `@/common/message/response/apps/littleMemo/{module}/{module}.js`，成功和业务错误都通过消息常量返回，禁止硬编码
-- **业务码段**：`code-segments.js` 统一分配，littleMemo 各模块：
-  - `community` 11000-11099 / `moodCheckIn` 11100-11199 / `myNotes` 11200-11299
-  - `favorites` 11300-11399 / `profile` 11400-11499 / `feedback` 11500-11599
+- **消息常量**：后端每个模块都有对应消息文件 `@/common/message/response/apps/discountExpert/{module}/{module}.js`，成功和业务错误都通过消息常量返回，禁止硬编码
+- **业务码段**：`code-segments.js` 统一分配，discountExpert 各模块待规划
 - **参数校验失败**：后端抛 `BusinessError`，HTTP 仍为 200，`status` 为对应业务码
 - **系统异常**：HTTP 500，`status: 10099, code: 'common.unknownError'`
-- **接口路径规则**：`/api/littleMemo/{moduleName}`，如 `/api/littleMemo/feedback`
+- **接口路径规则**：`/api/discountExpert/{moduleName}`，如 `/api/discountExpert/feedback`
 
 #### 新增后端接口时的检查清单
 每次前端调用新接口，后端必须同步完成：
 1. `schemas/` 定义 Mongoose Schema（时间字段用 Number 毫秒时间戳，明确 `collection`）
 2. `models/` 封装数据访问（只查询/写入，不做业务编排）
 3. `services/` 业务编排，错误用 `throw new BusinessError(moduleMessage.xxx)`
-4. 创建消息常量文件 `@/common/message/response/apps/littleMemo/{module}/{module}.js`
+4. 创建消息常量文件 `@/common/message/response/apps/discountExpert/{module}/{module}.js`
 5. `routes/` 路由层：参数解析 + 鉴权 + 调 service + `res.json({ ...moduleMessage.xxxSuccess, data })`；错误用 `return handleError(res, error, '默认提示')`
 6. 在 `code-segments.js` 分配码段（若新模块）
-7. 在 `apps/littleMemo/index.js` 导出 Router，在 `application/routes.js` 和 `routes/index.js` 注册挂载
+7. 在 `apps/discountExpert/index.js` 导出 Router，在 `application/routes.js` 和 `routes/index.js` 注册挂载
 
 ### Services 层规范
 - **写法风格**：不使用 `async/await`，直接返回 Promise 链式调用
@@ -380,7 +376,7 @@ src/components/
   // 推荐
   getPosts(params: IGetPostsParams = {}) {
     return http
-      .get(`${env.HOST_API_URL}/api/littleMemo/community/posts`, { params })
+      .get(`${env.HOST_API_URL}/api/discountExpert/community/posts`, { params })
       .then(response => response.data)
   }
   ```
@@ -702,6 +698,103 @@ const handleSubmit = async () => {
 - **导航测试**: 页面跳转流程
 - **状态测试**: 数据流验证
 - **UI测试**: 用户交互模拟
+
+## 已知问题与解决方案记录
+
+### 入口卡片跳转方案（WebView + H5 + App 唤起）
+
+#### 背景
+优惠入口点击后需要跳转到京东/淘宝/美团等平台的指定活动页，并尽量在对应 App 内打开。
+
+#### 最终方案
+1. 点击入口卡片 → 导航到 `WebViewScreen`，传入 `url`（H5 页面地址）和 `title`
+2. WebView 打开平台 H5 页面（如京东外卖红包页）
+3. H5 页面自带 JS 检测并弹出「在 App 中打开」提示
+4. 用户点击后触发 App scheme 跳转，`onShouldStartLoadWithRequest` 拦截非 http/https scheme，调用 `Linking.openURL` 唤起对应 App 并跳转到指定页面
+
+#### 关键配置（`src/pages/webView/components/webView.tsx`）
+- `originWhitelist={['*']}` — 让所有 scheme 经过 JS 层拦截，避免被 Android 原生 WebView 丢弃
+- `setSupportMultipleWindows={false}` — 避免新窗口跳出 WebView
+- `injectedJavaScriptBeforeContentLoaded` — 在页面 JS 执行前注入，隐藏 WebView 特征（`window.ReactNativeWebView`、`window.android`、`navigator.userAgent` 末尾的 `(wv)` 标记），让平台 H5 认为是系统浏览器，从而触发唤起弹窗
+- `onShouldStartLoadWithRequest` — 拦截所有非 http/https scheme，调用 `Linking.openURL` 唤起 App
+- `userAgent` — 使用不含 `(wv)` 的标准 Chrome UA
+
+#### 入口数据规范（`src/pages/home/stores/homeStore.ts`）
+- `deeplink` 和 `webFallback` 均使用 H5 页面地址（HTTPS），利用 App Link 机制
+- H5 链接从对应平台 App 内「分享」功能获取，去除 utm_ 等追踪参数后使用
+- 活动页链接有时效性，后续应改为后端动态下发
+
+#### 注意事项
+- 直接用 `openapp.jdmobile://` 等私有 scheme 只能打开 App 首页，无法跳指定页
+- 平台 H5 通过检测 `window.ReactNativeWebView`、UA 中的 `(wv)` 标记判断是否在 WebView 中，检测到后会禁用唤起弹窗
+- 需要在 `AndroidManifest.xml` 的 `<queries>` 中白名单各平台 scheme，否则 Android 11+ `Linking.canOpenURL` 返回 false
+
+---
+
+### HomeBackground 背景组件（Telegram 风格 SVG 背景）
+
+#### 组件位置
+`src/components/homeBackground/components/homeBackground.tsx`
+
+#### 架构设计
+三层叠加结构：
+1. `LinearGradient` 渐变底色（`#CFF5D2 → #A8E6B3 → #7FD89B`）
+2. SVG 图标随机网格层（低透明度 0.10~0.20，`pointerEvents="none"`）
+3. 柔光遮罩层（`rgba(255,255,255,0.18)`）
+
+#### SVG 数据 Pipeline
+- SVG 源文件存放于 `src/assets/svg/animal/`、`src/assets/svg/fruit/`、`src/assets/svg/common/`
+- 执行 `node scripts/generate-svg-data.js` 生成 `src/components/homeBackground/svgData.ts`
+- 脚本会自动：SVGO 压缩（`preset-default` 等插件）→ NaN/undefined/calc 替换为 0 → 转 TS 字符串常量
+- **新增 SVG 后必须重新运行脚本**，热更新即可生效，无需重新打包
+
+#### 关键性能优化（按重要性排序）
+
+1. **懒加载 svgData**：`import * as SvgData` 会在模块加载时同步解析所有字符串（阻塞 JS 线程），改为在 `useEffect → setTimeout(0)` 内 `require('../svgData')`，推迟到导航完成后的空闲时机
+
+2. **SVG 种类控制在 30**：加载后 `.slice(0, 30)`，配合 4 档固定尺寸（`SIZES = [40, 48, 56, 64]`），缓存条目上限 = 30 × 4 = 120，命中率最大化
+
+3. **ReactElement 缓存**：模块级 `svgCache: Map<string, ReactElement>`，key 为 `${size}:${xml}`，相同 SVG+尺寸组合只创建一次 ReactElement（注意：缓存的是 ReactElement 对象，不是底层解析结果，但可减少 JS 开销）
+
+4. **分批渲染**：`svgReady` 后每 16ms（一帧）新增 12 个图标，避免一次性 mount 全部图标卡帧；视觉上图标渐进出现，体验更自然
+
+5. **SVGO 压缩**：生成时自动压缩 SVG，减少路径节点 30%~70%，降低运行时 `SvgXml` 解析成本
+
+#### 网格布局参数
+- `cellSize = 72`：每格 72px，约 6×14 ≈ 84 个图标铺满屏幕
+- 每格随机偏移 ±10px + 随机旋转 0~360°，视觉自然不规则
+- 调整 `cellSize` 控制密度：数值越小越密，越大越稀
+
+#### 不使用 react-native-svg-transformer 的原因
+- Transformer 是编译期方案，需要静态 import 所有 SVG 组件
+- 本方案 SVG 是运行时从字符串池动态选取，无法静态 import
+- `SvgXml` + 懒加载 + 缓存已满足性能要求，不引入额外复杂度
+
+#### 已安装依赖
+- `react-native-linear-gradient`：渐变底色
+- `@shopify/react-native-skia`：已安装备用，暂未用于背景渲染
+- `svgo`（devDependency）：SVG 压缩，仅在脚本中使用
+
+---
+
+### iOS 构建问题（从 littleMemo 项目迁移遗留）
+
+#### 问题现象
+`npm run ios:production:device` 报错：
+- `'/Users/.../ios/littleMemo.xcodeproj' does not exist`
+- `Scheme discountExpert is not currently configured for the build action`
+- `No profiles for 'org.reactjs.native.example.discountExpert'`
+
+#### 根本原因
+项目从 `littleMemo` 迁移而来，多个文件残留旧项目名：
+1. `ios/discountExpert.xcworkspace/contents.xcworkspacedata` — 包含 `group:littleMemo.xcodeproj` 引用
+2. `ios/discountExpert.xcodeproj/xcshareddata/xcschemes/discountExpert.xcscheme` — 所有 target 引用都指向 `littleMemo`
+
+#### 解决方案
+1. **`contents.xcworkspacedata`**：删除 `group:littleMemo.xcodeproj` 的 `<FileRef>` 节点
+2. **`discountExpert.xcscheme`**：将所有 `littleMemo` 引用替换为 `discountExpert`（`BuildableName`、`BlueprintName`、`ReferencedContainer`）
+3. **操作时机**：必须在 Xcode **完全关闭**后修改，否则 Xcode 会在保存时用内存中的旧内容覆盖回去
+4. **签名问题**：Bundle ID 默认为 `org.reactjs.native.example.discountExpert`，需在 Xcode Signing & Capabilities 中开启 Automatic Signing 并选择 Team，或在 pbxproj 中修改 Bundle ID
 
 ## 技术债务管理
 

@@ -1,1 +1,3 @@
-export { default as useProfileStore } from './profileStore'
+import profileStore from './profileStore'
+
+export { profileStore }

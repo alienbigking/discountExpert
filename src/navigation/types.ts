@@ -1,15 +1,14 @@
 import type React from 'react'
 
 export type RouteName =
+  | 'Main'
   | 'Home'
-  | 'Community'
-  | 'Profile'
   | 'Login'
-  | 'MyPosts'
-  | 'Favorites'
+  | 'Register'
+  | 'Profile'
   | 'Settings'
   | 'HelpFeedback'
-  | 'PostDetail'
+  | 'EditProfile'
 
 export type RouteConfig = {
   name: RouteName

@@ -1,1 +1,3 @@
-export { default as useHelpFeedbackStore } from './helpFeedbackStore'
+import { useHelpFeedbackStore } from './helpFeedbackStore'
+
+export { useHelpFeedbackStore }

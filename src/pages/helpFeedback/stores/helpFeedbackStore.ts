@@ -6,4 +6,6 @@ const helpFeedbackStore = create<HelpFeedbackState>(set => ({
   setLoading: loading => set({ loading }),
 }))
 
+export const useHelpFeedbackStore = helpFeedbackStore
+
 export default helpFeedbackStore

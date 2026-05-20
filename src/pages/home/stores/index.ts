@@ -1,1 +1,3 @@
-export { default as useHomeStore } from './homeStore'
+import { useHomeStore } from './homeStore'
+
+export { useHomeStore }

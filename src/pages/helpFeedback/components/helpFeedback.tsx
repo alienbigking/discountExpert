@@ -17,13 +17,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Toast } from 'toastify-react-native'
 import { useHelpFeedbackStore } from '../stores'
 import { helpFeedbackService } from '../services'
-import AppBackground from '@/components/appBackground'
 import { useSettingsStore } from '@/pages/settings/stores'
 
 const HelpFeedback: React.FC = () => {
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
-  const { loading, setLoading } = useHelpFeedbackStore()
+  const loading = useHelpFeedbackStore(s => s.loading)
+  const setLoading = useHelpFeedbackStore(s => s.setLoading)
   const appBackground = useSettingsStore(s => s.appBackground)
 
   const [contact, setContact] = useState('')
@@ -56,7 +56,12 @@ const HelpFeedback: React.FC = () => {
   }
 
   return (
-    <AppBackground style={{ paddingTop: insets.top }}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: insets.top, backgroundColor: appBackground },
+      ]}
+    >
       <View style={[styles.header, { backgroundColor: appBackground }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -80,15 +85,22 @@ const HelpFeedback: React.FC = () => {
             <Text style={styles.sectionTitle}>常见问题</Text>
 
             <View style={styles.faqItem}>
-              <Text style={styles.faqQ}>Q：同步到社区是什么？</Text>
+              <Text style={styles.faqQ}>Q：优惠入口深链接无法跳转怎么办？</Text>
               <Text style={styles.faqA}>
-                开启后，你的打卡会自动生成一条社区帖子。
+                请确认目标 App
+                已安装。若已安装仍无法跳转，将尝试通过网页版打开活动页面。
               </Text>
             </View>
             <View style={styles.faqItem}>
-              <Text style={styles.faqQ}>Q：关闭允许互动会怎样？</Text>
+              <Text style={styles.faqQ}>Q：入口打开后看不到活动怎么办？</Text>
               <Text style={styles.faqA}>
-                关闭后，你无法进行“共鸣互动”，按钮会变灰。
+                部分活动为限时或定向活动，可能已过期或不对所有用户开放。
+              </Text>
+            </View>
+            <View style={styles.faqItem}>
+              <Text style={styles.faqQ}>Q：如何推荐新的优惠入口？</Text>
+              <Text style={styles.faqA}>
+                在下方反馈框中描述入口名称和平台，我们会评估并及时更新。
               </Text>
             </View>
 
@@ -134,11 +146,12 @@ const HelpFeedback: React.FC = () => {
           </ScrollView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
-    </AppBackground>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -148,56 +161,27 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  backBtn: {
-    width: 72,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#E84C5F',
-    fontWeight: '500',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333',
-  },
-  headerRight: {
-    width: 40,
-    height: 40,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  scrollContent: {
-    paddingBottom: 24,
-  },
+  backBtn: { width: 72 },
+  backText: { fontSize: 16, color: '#E84C5F', fontWeight: '500' },
+  title: { fontSize: 18, fontWeight: '700', color: '#333' },
+  headerRight: { width: 40, height: 40 },
+  content: { flex: 1, padding: 16 },
+  scrollContent: { paddingBottom: 24 },
   sectionTitle: {
     fontSize: 14,
     fontWeight: '800',
     color: '#333',
     marginBottom: 10,
   },
-  sectionTitleSpacingTop: {
-    marginTop: 20,
-  },
+  sectionTitleSpacingTop: { marginTop: 20 },
   faqItem: {
     backgroundColor: '#f8f9fa',
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
   },
-  faqQ: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: 6,
-  },
-  faqA: {
-    fontSize: 13,
-    color: '#666',
-    lineHeight: 19,
-  },
+  faqQ: { fontSize: 14, fontWeight: '700', color: '#333', marginBottom: 6 },
+  faqA: { fontSize: 13, color: '#666', lineHeight: 19 },
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
@@ -209,9 +193,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 10,
   },
-  textarea: {
-    height: 140,
-  },
+  textarea: { height: 140 },
   submitBtn: {
     marginTop: 6,
     backgroundColor: '#5B54E4',
@@ -219,17 +201,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: 'center',
   },
-  submitBtnDisabled: {
-    backgroundColor: '#E1E1F6',
-  },
-  submitText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#fff',
-  },
-  submitTextDisabled: {
-    color: '#fff',
-  },
+  submitBtnDisabled: { backgroundColor: '#E1E1F6' },
+  submitText: { fontSize: 14, fontWeight: '800', color: '#fff' },
+  submitTextDisabled: { color: '#fff' },
 })
 
 export default HelpFeedback

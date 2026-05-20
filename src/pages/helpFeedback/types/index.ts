@@ -1,6 +1,6 @@
-export type {
+import type {
   HelpFeedbackState,
-  FeedbackItem,
-  SubmitFeedbackPayload,
   ISubmitFeedbackParams,
 } from './helpFeedbackTypes'
+
+export type { HelpFeedbackState, ISubmitFeedbackParams }

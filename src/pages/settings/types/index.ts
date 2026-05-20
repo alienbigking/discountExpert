@@ -1,1 +1,3 @@
-export type { SettingsState } from './settingsTypes'
+import type { SettingsState } from './settingsTypes'
+
+export type { SettingsState }

@@ -1,1 +1,3 @@
-export { default as profileService } from './profileService'
+import profileService from './profileService'
+
+export { profileService }

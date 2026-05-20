@@ -1,10 +1,7 @@
-export type {
-  UserProfile,
-  UserSettings,
-  UserStats,
-  ProfileState,
-  IUpdatePrivacyParams,
-  IUpdateStreakParams,
+import type {
   UserInfo,
   IUpdateProfileParams,
+  ProfileStoreState,
 } from './profileTypes'
+
+export type { UserInfo, IUpdateProfileParams, ProfileStoreState }

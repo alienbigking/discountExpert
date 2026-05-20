@@ -1,57 +1,156 @@
-// Home module store
-// "还在吗"应用 - 情绪打卡状态管理
-
 import { create } from 'zustand'
-import type { HomeStoreState, MoodType, MoodHistoryItem } from '../types'
+import type { HomeStoreState, Platform, Entry } from '../types'
 
-const homeStore = create<HomeStoreState>(set => ({
-  todayCheckedIn: false,
-  currentMood: null,
-  checkInStreak: 0,
-  totalCheckIn: 0,
-  sameMoodCount: 0,
-  moodHistory: [],
-  moodConfig: {
-    fine: {
-      emoji: '🟢',
-      text: '还行',
-      description: '平静的一天',
-      color: '#7DB36C',
-      lightBg: '#E8F4DD',
-    },
-    struggling: {
-      emoji: '🟡',
-      text: '勉强',
-      description: '有点撑不住',
-      color: '#F4C44C',
-      lightBg: '#FDF4D9',
-    },
-    bad: {
-      emoji: '🔴',
-      text: '不太好',
-      description: '需要被看见',
-      color: '#E84C5F',
-      lightBg: '#FFE5E8',
-    },
-  },
+const DEFAULT_PLATFORMS: Platform[] = [
+  { id: 'all', name: '全部', color: '#1C1C1E' },
+  { id: 'jd', name: '京东', color: '#E54444' },
+  { id: 'taobao', name: '淘宝', color: '#FF6600' },
+  { id: 'pinduoduo', name: '拼多多', color: '#7B3FE4' },
+  { id: 'eleme', name: '饿了么', color: '#0EA5E9' },
+  { id: 'douyin', name: '抖音', color: '#161823' },
+  { id: 'didi', name: '滴滴', color: '#F76E1E' },
+]
 
-  setTodayCheckedIn: (todayCheckedIn: boolean) => set({ todayCheckedIn }),
-  setCurrentMood: (currentMood: MoodType | null) => set({ currentMood }),
-  setCheckInStreak: (checkInStreak: number) => set({ checkInStreak }),
-  setTotalCheckIn: (totalCheckIn: number) => set({ totalCheckIn }),
-  setSameMoodCount: (sameMoodCount: number) => set({ sameMoodCount }),
-  setMoodHistory: (moodHistory: MoodHistoryItem[]) => set({ moodHistory }),
-  addMoodHistory: (item: MoodHistoryItem) =>
-    set((state: HomeStoreState) => ({
-      moodHistory: [item, ...state.moodHistory].slice(0, 30),
-    })),
-  resetDaily: () => {
-    set({
-      todayCheckedIn: false,
-      currentMood: null,
-      sameMoodCount: 0,
-    })
+const DEFAULT_ENTRIES: Entry[] = [
+  {
+    id: 'jd_food_001',
+    platform: 'jd',
+    platformName: '京东',
+    platformColor: '#E54444',
+    title: '惊喜大额外卖红包',
+    deeplink:
+      'https://union-click.jd.com/jdc?e=1000521676&p=JF8BAeYJK1olXDYDZBoCUBVIMzZNXhpXVhgcDQAZS1RMVnBaRQcLDVBUFwoLWA5PXTB6QgtKAlJfNRoOFhlOUzBXTwYbD19SCwEJVS5fQjsERwNcP15dAgMJehJHXDBcRkxXD1JdAFIfUBRBXjsfSxhDHxpACA4AVTJJXzt0RQ5RAFJ6AVJfD0sXAnhRTQMJD0dALBwfTB9yXStaQjpLBVlHLAtReyoLAG4LH1ocXQ8eVV9cCFxOVTcUSRpXK0VSBzsDTBlOYjFQRB5tCApxNUJeCUgTA2wLGUcUXAcBQwEJXB5qQmNNWB9BSkVWAwoeShVTUTsESRpXSkRcEB0PXCxHXitcF14UXAcDXEkeXBtKZjdUTyZLDwoCQwcFXR9oUygEG0xMBVNWPCM2c0cXFCpQXgZBURJ2UEotDV8fBHt8H08cKBIKU249SStJcBgWWjheI2ZqKz4vCQBLSBx4F1clXDYBVV5ZCU4VA20BK14SWQQGVwUZTQ9PWTsIGFkQWQEyVF5tQyUWM244G10TVQUFUVxfC0IRA18IE1wlhLapg-HE3NSE2t-tzfG7bTYDZF1tCEoWAmsLG1wTWjYyVW5eOBV5AmgKG1wVWA9sCB8ISktKQzxmG14RWAUHVlhtCkoWAW04K2slbTY',
+    webFallback:
+      'https://prodev.m.jd.com/mall/active/VAjs3vpayA513UwxL5XC4eGBXqY/index.html',
+    category: 'food',
+    icon: '📦',
+    tag: '热门',
   },
+  {
+    id: 'jd_shop_002',
+    platform: 'jd',
+    platformName: '京东',
+    platformColor: '#E54444',
+    title: '京东外卖直降，最低9.9元',
+    deeplink:
+      'https://union-click.jd.com/jdc?e=1000521676&p=JF8BAPwJK1olXDYDZBoCUBVIMzZNXhpXVhgcFR0DXR9QHDMXQA4KD1heSgINVRYJUz1NQxxBQwNkCgkbSBlJajN9HyRRWUZcFRwaaSNSaxtRcw8LBVlXABdCUQ5LXl8LHCITAXZLVD4fWBtVYAoPeiRhXQNUWFJtCXsUAm8MGl4XXQQLZFtaDEkTADRMXh9NB1ICV1xYDEwnA284UDUUbQcyVFhbAEgQBGwMHFsTWzYCXFlt0fu81NCRz8SGhLangvTzOHsWM2w4G1oUXAIBVFlbD3snAV8LKwV7XAFSAFpdD0x5Xy5dXlxQHlJsVFtYAUITBGs4GVoUXwQyZG5tOHs',
+    webFallback:
+      'https://pro.m.jd.com/mall/active/3NMXqvD5BTjqigKB7HxVfkpSoR8q/index.html',
+    category: 'shop',
+    icon: '🎟️',
+  },
+  {
+    id: 'jd_shop_003',
+    platform: 'jd',
+    platformName: '京东',
+    platformColor: '#E54444',
+    title: '京东品质外卖，超低价',
+    deeplink:
+      'https://union-click.jd.com/jdc?e=1000521676&p=JF8BAPgJK1olXDYDZBoCUBVIMzZNXhpXVhgcFR0DFxcIWDoXSQVJQ1pSCQNDWBlSWyhcBVl9OWFLUV44QUxUfCpXcyZRW0cEXTYqCzFIShAWQwRACU8dDRsBVXtKZm0Oa1lFNGRYBAwUYw9pSjlsaxJDUQoyVW5eCUsTAmoKG1kcbQMFUFxZCxBTRitQQQ8VXgQHUFltCEsnSAEJK1olXQAEXF1aD08eBGcIH2sVVQEyje723_SO1_Cbwuuwi6ysZG5tC3sXAm4JH1gVWgAFZG5fOEgnXQEJHF0UWVFWBjABSR5SVilARDUVWAAFU1pZC3sVAm4KGWslbTYyZA',
+    webFallback:
+      'https://pro.m.jd.com/mall/active/3NMXqvD5BTjqigKB7HxVfkpSoR8q/index.html',
+    category: 'shop',
+    icon: '🎟️',
+  },
+  {
+    id: 'taobao_shop_001',
+    platform: 'taobao',
+    platformName: '淘宝',
+    platformColor: '#FF6600',
+    title: '领券中心',
+    deeplink: 'https://uland.taobao.com/coupon/edetail',
+    webFallback: 'https://uland.taobao.com/coupon/edetail',
+    category: 'shop',
+    icon: '🏪',
+    tag: '热门',
+  },
+  {
+    id: 'taobao_shop_002',
+    platform: 'taobao',
+    platformName: '淘宝',
+    platformColor: '#FF6600',
+    title: '88VIP 会员中心',
+    deeplink: 'https://vip.taobao.com/',
+    webFallback: 'https://vip.taobao.com/',
+    category: 'shop',
+    icon: '🏷️',
+  },
+  {
+    id: 'pdd_shop_001',
+    platform: 'pinduoduo',
+    platformName: '拼多多',
+    platformColor: '#7B3FE4',
+    title: '限时秒杀',
+    deeplink: 'https://mobile.yangkeduo.com/today.html',
+    webFallback: 'https://mobile.yangkeduo.com/today.html',
+    category: 'shop',
+    icon: '✨',
+    tag: '热门',
+  },
+  {
+    id: 'pdd_shop_002',
+    platform: 'pinduoduo',
+    platformName: '拼多多',
+    platformColor: '#7B3FE4',
+    title: '百亿补贴',
+    deeplink: 'https://mobile.yangkeduo.com/brand_sale.html',
+    webFallback: 'https://mobile.yangkeduo.com/brand_sale.html',
+    category: 'shop',
+    icon: '💰',
+  },
+  {
+    id: 'eleme_food_001',
+    platform: 'eleme',
+    platformName: '饿了么',
+    platformColor: '#0EA5E9',
+    title: '领红包入口',
+    deeplink: 'https://h5.ele.me/',
+    webFallback: 'https://h5.ele.me/',
+    category: 'food',
+    icon: '🎁',
+    tag: '新上线',
+  },
+  {
+    id: 'didi_trip_001',
+    platform: 'didi',
+    platformName: '滴滴',
+    platformColor: '#F76E1E',
+    title: '打车优惠券',
+    deeplink: 'https://h5.didiglobal.com/site/didi-coupon/index.html',
+    webFallback: 'https://h5.didiglobal.com/site/didi-coupon/index.html',
+    category: 'trip',
+    icon: '🚕',
+    tag: '热门',
+  },
+  {
+    id: 'didi_trip_002',
+    platform: 'didi',
+    platformName: '滴滴',
+    platformColor: '#F76E1E',
+    title: '青桔单车',
+    deeplink: 'https://h5.didiglobal.com/greenorange/index.html',
+    webFallback: 'https://h5.didiglobal.com/greenorange/index.html',
+    category: 'trip',
+    icon: '🚲',
+  },
+  {
+    id: 'douyin_shop_001',
+    platform: 'douyin',
+    platformName: '抖音',
+    platformColor: '#161823',
+    title: '抖音商城',
+    deeplink: 'https://haohuo.jinritemai.com/views/product/item2',
+    webFallback: 'https://haohuo.jinritemai.com/views/product/item2',
+    category: 'shop',
+    icon: '🎬',
+  },
+]
+
+export const useHomeStore = create<HomeStoreState>(set => ({
+  selectedPlatform: 'all',
+  searchKeyword: '',
+  platforms: DEFAULT_PLATFORMS,
+  entries: DEFAULT_ENTRIES,
+  setSelectedPlatform: platform => set({ selectedPlatform: platform }),
+  setSearchKeyword: keyword => set({ searchKeyword: keyword }),
 }))
-
-export default homeStore

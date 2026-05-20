@@ -11,15 +11,13 @@ import {
   StatusBar,
 } from 'react-native'
 import { Toast } from 'toastify-react-native'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useAuthRouteStore } from '@/components/authRoute/stores'
-import { reset } from '@/navigation/navigationService'
 import { loginService } from '../services'
 import { env } from '@/config'
 import type { RootStackParamList } from '@/navigation/appNavigator'
 import LoginBackground from './loginBackground'
-import { useSettingsStore } from '@/pages/settings/stores'
 
 const Login = () => {
   const navigation =
@@ -32,25 +30,6 @@ const Login = () => {
   const [verifyCode, setVerifyCode] = useState('')
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { appBackground } = useSettingsStore()
-
-  // 改为由路由统一控制状态，此代码不要删除
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (Platform.OS === 'android') {
-  //       StatusBar.setTranslucent(true)
-  //       StatusBar.setBackgroundColor('transparent')
-  //       StatusBar.setBarStyle('dark-content')
-  //     }
-  //     return () => {
-  //       if (Platform.OS === 'android') {
-  //         StatusBar.setTranslucent(false)
-  //         StatusBar.setBackgroundColor(appBackground)
-  //         StatusBar.setBarStyle('dark-content')
-  //       }
-  //     }
-  //   }, [appBackground]),
-  // )
 
   const handleLogin = async () => {
     const credential = loginMode === 'password' ? password : verifyCode
@@ -86,15 +65,14 @@ const Login = () => {
         setToken(data?.accessToken)
         console.log('设置后的 store token:', useAuthRouteStore.getState().token)
         setLoggedIn(true)
-        reset('Main')
+        navigation.goBack()
         Toast.success('登录成功！')
       } else {
-        Toast.error(message || '登录失败')
+        Toast.error(message)
       }
     } catch (error: any) {
-      console.error('登录失败:', error)
       const { message: errMsg } = error || {}
-      Toast.info(errMsg || '登录失败，请检查用户名和验证码')
+      Toast.info(errMsg)
     } finally {
       setLoading(false)
     }
@@ -115,8 +93,8 @@ const Login = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <View style={styles.loginBox}>
-          <Text style={styles.loginTitle}>嗨~ 你来啦~</Text>
-          <Text style={styles.loginHint}>😁今天也要快乐呀！</Text>
+          <Text style={styles.loginTitle}>登录优惠达人</Text>
+          <Text style={styles.loginHint}>� 每天都有优惠等你来拿！</Text>
 
           <View style={styles.tabContainer}>
             <TouchableOpacity

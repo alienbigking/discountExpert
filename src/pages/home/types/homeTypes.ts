@@ -1,63 +1,51 @@
-// Home module types
-// "还在吗"应用 - 情绪打卡功能
+export type PlatformId =
+  | 'all'
+  | 'jd'
+  | 'taobao'
+  | 'didi'
+  | 'meituan'
+  | 'pinduoduo'
+  | 'eleme'
+  | 'douyin'
+  | 'other'
 
-export type HomeDemoType = {
-  id: string
-}
+export type EntryCategory =
+  | 'food'
+  | 'shop'
+  | 'travel'
+  | 'trip'
+  | 'life'
+  | 'other'
 
-export type HomeFeedQueryType = {
-  page?: number
-  pageSize?: number
-}
-
-export interface ICheckInParams {
-  mood: MoodType
-  syncToCommunity: boolean
-}
-
-export interface IGetHistoryParams {
-  limit?: number
-}
-
-export interface IGetSameMoodCountParams {
-  mood: MoodType
-}
-
-// 情绪类型定义
-export type MoodType = 'fine' | 'struggling' | 'bad'
-
-export interface MoodHistoryItem {
-  mood: MoodType
-  timestamp: number
-  checkInDate: string // YYYY-MM-DD
-}
-
-// 单个情绪配置
-export interface MoodConfigItem {
-  emoji: string
-  text: string
-  description: string
+export interface Platform {
+  id: PlatformId
+  name: string
   color: string
-  lightBg: string
 }
 
-// 主页Store状态
-export interface HomeStoreState {
-  todayCheckedIn: boolean
-  currentMood: MoodType | null
-  checkInStreak: number
-  totalCheckIn: number
-  sameMoodCount: number
-  moodHistory: MoodHistoryItem[]
-  moodConfig: Record<MoodType, MoodConfigItem>
+export interface Entry {
+  id: string
+  platform: Exclude<PlatformId, 'all'>
+  platformName: string
+  platformColor: string
+  title: string
+  deeplink: string
+  webFallback: string
+  category: EntryCategory
+  icon?: string
+  tag?: string
+}
 
-  // State setters
-  setTodayCheckedIn: (todayCheckedIn: boolean) => void
-  setCurrentMood: (currentMood: MoodType | null) => void
-  setCheckInStreak: (checkInStreak: number) => void
-  setTotalCheckIn: (totalCheckIn: number) => void
-  setSameMoodCount: (sameMoodCount: number) => void
-  setMoodHistory: (moodHistory: MoodHistoryItem[]) => void
-  addMoodHistory: (item: MoodHistoryItem) => void
-  resetDaily: () => void
+export interface HomeStoreState {
+  selectedPlatform: PlatformId
+  searchKeyword: string
+  platforms: Platform[]
+  entries: Entry[]
+  setSelectedPlatform: (platform: PlatformId) => void
+  setSearchKeyword: (keyword: string) => void
+}
+
+export interface IOpenEntryParams {
+  deeplink: string
+  webFallback: string
 }

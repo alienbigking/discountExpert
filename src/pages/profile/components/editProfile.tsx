@@ -15,9 +15,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Toast } from 'toastify-react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
-import profileService from '../services/profileService'
-import profileStore from '../stores/profileStore'
-import AppBackground from '@/components/appBackground'
+import { profileStore } from '../stores'
+import { profileService } from '../services'
 import { env } from '@/config'
 import type { UserInfo } from '../types'
 
@@ -48,10 +47,11 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
         if (response.didCancel || response.errorCode) return
         const asset = response.assets?.[0]
         if (!asset?.uri) return
+        const assetUri = asset.uri
         setUploading(true)
         try {
           const { status, data, message } = await profileService.uploadAvatar(
-            asset.uri!,
+            assetUri,
             asset.fileName || 'avatar.jpg',
             asset.type || 'image/jpeg',
           )
@@ -96,12 +96,11 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
   }
 
   return (
-    <AppBackground style={{ paddingTop: insets.top }}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <KeyboardAvoidingView
         style={styles.inner}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        {/* 顶部导航 */}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -113,10 +112,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
           <TouchableOpacity
             onPress={handleSave}
             disabled={!hasChanged || submitting}
-            style={[
-              styles.saveBtn,
-              (!hasChanged || submitting) && styles.saveBtnDisabled,
-            ]}
+            style={styles.saveBtn}
           >
             <Text
               style={[
@@ -134,7 +130,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* 头像选择 */}
           <TouchableOpacity
             style={styles.avatarSection}
             onPress={handlePickAvatar}
@@ -166,7 +161,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
             </Text>
           </TouchableOpacity>
 
-          {/* 表单 */}
           <View style={styles.form}>
             <View style={styles.fieldGroup}>
               <Text style={styles.fieldLabel}>昵称</Text>
@@ -184,14 +178,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ route }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </AppBackground>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  inner: {
-    flex: 1,
-  },
+  container: { flex: 1, backgroundColor: '#FAFAF7' },
+  inner: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -201,40 +194,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  backBtn: {
-    width: 64,
-  },
-  backText: {
-    fontSize: 18,
-    color: '#E84C5F',
-  },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#333',
-  },
-  saveBtn: {
-    width: 64,
-    alignItems: 'flex-end',
-  },
-  saveBtnDisabled: {},
-  saveText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#E84C5F',
-  },
-  saveTextDisabled: {
-    color: '#ccc',
-  },
-  content: {
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 40,
-  },
-  avatarSection: {
-    alignItems: 'center',
-    marginBottom: 36,
-  },
+  backBtn: { width: 64 },
+  backText: { fontSize: 18, color: '#E84C5F' },
+  headerTitle: { fontSize: 17, fontWeight: '600', color: '#333' },
+  saveBtn: { width: 64, alignItems: 'flex-end' },
+  saveText: { fontSize: 16, fontWeight: '600', color: '#E84C5F' },
+  saveTextDisabled: { color: '#ccc' },
+  content: { paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 },
+  avatarSection: { alignItems: 'center', marginBottom: 36 },
   avatarWrapper: {
     width: 88,
     height: 88,
@@ -255,36 +222,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarEditIcon: {
-    fontSize: 13,
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-  },
+  avatarEditIcon: { fontSize: 13 },
+  avatarImage: { width: '100%', height: '100%' },
   avatarPlaceholder: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarPlaceholderText: {
-    fontSize: 40,
-  },
-  avatarHint: {
-    fontSize: 12,
-    color: '#bbb',
-  },
-  form: {
-    gap: 24,
-  },
-  fieldGroup: {
-    gap: 8,
-  },
-  fieldLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
+  avatarPlaceholderText: { fontSize: 40 },
+  avatarHint: { fontSize: 12, color: '#bbb' },
+  form: { gap: 24 },
+  fieldGroup: { gap: 8 },
+  fieldLabel: { fontSize: 14, fontWeight: '600', color: '#333' },
   input: {
     borderWidth: 1,
     borderColor: '#e8e8e8',
@@ -295,11 +244,7 @@ const styles = StyleSheet.create({
     color: '#333',
     backgroundColor: '#fafafa',
   },
-  fieldCount: {
-    fontSize: 12,
-    color: '#bbb',
-    textAlign: 'right',
-  },
+  fieldCount: { fontSize: 12, color: '#bbb', textAlign: 'right' },
 })
 
 export default EditProfile

@@ -1,1 +1,3 @@
-export { default as helpFeedbackService } from './helpFeedbackService'
+import helpFeedbackService from './helpFeedbackService'
+
+export { helpFeedbackService }

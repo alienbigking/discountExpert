@@ -1,3 +1,4 @@
 import Profile from './profile'
+import EditProfile from './editProfile'
 
-export { Profile }
+export { Profile, EditProfile }

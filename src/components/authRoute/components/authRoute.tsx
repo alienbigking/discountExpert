@@ -13,8 +13,6 @@ const AuthRoute = ({
   const isLoggedIn = useAuthRouteStore(s => s.isLoggedIn)
   const prevIsLoggedInRef = useRef<boolean | null>(null)
   const [hydrated, setHydrated] = useState(false)
-  const [authChecked, setAuthChecked] = useState(false)
-  const authCheckedRef = useRef(false)
 
   // 等待 zustand persist 从 AsyncStorage 恢复状态
   useEffect(() => {
@@ -50,21 +48,9 @@ const AuthRoute = ({
       prev: prevIsLoggedInRef.current,
     })
 
-    // 初始状态处理
+    // 初始状态处理：无论是否登录，都停留在主页
     if (prevIsLoggedInRef.current === null) {
       prevIsLoggedInRef.current = isLoggedIn
-      if (!isLoggedIn) {
-        console.log('AuthRoute: 初始状态，未登录，跳转到登录页')
-        requestAnimationFrame(() => {
-          reset('Login')
-          authCheckedRef.current = true
-          setAuthChecked(true)
-        })
-      } else {
-        console.log('AuthRoute: 初始状态，已登录，停留在主页')
-        authCheckedRef.current = true
-        setAuthChecked(true)
-      }
       return
     }
 

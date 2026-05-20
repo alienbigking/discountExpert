@@ -1,1 +1,3 @@
-export { default as useSettingsStore } from './settingsStore'
+import { useSettingsStore } from './settingsStore'
+
+export { useSettingsStore }

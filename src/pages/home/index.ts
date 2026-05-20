@@ -1,5 +1,7 @@
-export { default as Home } from './components/home'
-export { homeRoutes } from './routes'
-export * from './services'
-export * from './stores'
-export * from './types'
+import { Home } from './components'
+import { useHomeStore } from './stores'
+import { homeService } from './services'
+
+export { Home, useHomeStore, homeService }
+
+export type { Entry, PlatformId, Platform, HomeStoreState } from './types'

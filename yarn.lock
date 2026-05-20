@@ -1921,6 +1921,18 @@
   resolved "https://registry.npmmirror.com/@sayem314/react-native-keep-awake/-/react-native-keep-awake-1.4.0.tgz"
   integrity sha512-EOg6im5sSuwPC3hamXjW2kb6KB1HuluivdGzjvIRAeeEH7cVyaBTcSaV3SZerQRImTxoaVLMnD1FOEyQQK6etg==
 
+"@shopify/react-native-skia@^2.6.2":
+  version "2.6.2"
+  resolved "https://registry.npmmirror.com/@shopify/react-native-skia/-/react-native-skia-2.6.2.tgz"
+  integrity sha512-NzZ3+MRedZAUhguWw9DTCpWFd09Bq+tdGWhimGfJLGckuyoWGyimTiNTmaO2DeeivHTnGdv+eXbw7j/AV3LkRQ==
+  dependencies:
+    canvaskit-wasm "0.41.0"
+    react-native-skia-android "147.1.0"
+    react-native-skia-apple-ios "147.1.0"
+    react-native-skia-apple-macos "147.1.0"
+    react-native-skia-apple-tvos "147.1.0"
+    react-reconciler "0.31.0"
+
 "@sideway/address@^4.1.5":
   version "4.1.5"
   resolved "https://registry.npmmirror.com/@sideway/address/-/address-4.1.5.tgz"
@@ -2221,6 +2233,11 @@
   version "9.3.1"
   resolved "https://registry.npmmirror.com/@vscode/sudo-prompt/-/sudo-prompt-9.3.1.tgz"
   integrity sha512-9ORTwwS74VaTn38tNbQhsA5U44zkJfcb0BdTSyyG6frP4e8KMtHuTXYmwefe5dpL8XB1aGSIVTaLjD3BbWb5iA==
+
+"@webgpu/types@0.1.21":
+  version "0.1.21"
+  resolved "https://registry.npmmirror.com/@webgpu/types/-/types-0.1.21.tgz"
+  integrity sha512-pUrWq3V5PiSGFLeLxoGqReTZmiiXwY3jRkIG5sLLKjyqNxrwm/04b4nw7LSmGWJcKk59XOM/YRTUwOzo4MMlow==
 
 "@xmldom/xmldom@^0.8.8":
   version "0.8.13"
@@ -2638,7 +2655,7 @@ balanced-match@^4.0.2:
   resolved "https://registry.npmmirror.com/balanced-match/-/balanced-match-4.0.4.tgz"
   integrity sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==
 
-base-64@0.1.0:
+base-64@^0.1.0, base-64@0.1.0:
   version "0.1.0"
   resolved "https://registry.npmmirror.com/base-64/-/base-64-0.1.0.tgz"
   integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
@@ -2852,6 +2869,13 @@ caniuse-lite@^1.0.30001669:
   version "1.0.30001680"
   resolved "https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001680.tgz"
   integrity sha512-rPQy70G6AGUMnbwS1z6Xg+RkHYPAi18ihs47GH0jcxIG7wArmPgY3XbS2sRdBbxJljp3thdT8BIqv9ccCypiPA==
+
+canvaskit-wasm@0.41.0:
+  version "0.41.0"
+  resolved "https://registry.npmmirror.com/canvaskit-wasm/-/canvaskit-wasm-0.41.0.tgz"
+  integrity sha512-cnbL02NFB3yOYMF/MtxViZHgD1vh55Pvy+zR8q4JuFvyCPejZP3eClkt2GuZ0S7jOmGMCJXaHBasbMChbR9JZg==
+  dependencies:
+    "@webgpu/types" "0.1.21"
 
 capture-stack-trace@^1.0.0:
   version "1.0.2"
@@ -3070,6 +3094,11 @@ command-exists@^1.2.8:
   resolved "https://registry.npmmirror.com/command-exists/-/command-exists-1.2.9.tgz"
   integrity sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==
 
+commander@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.npmmirror.com/commander/-/commander-11.1.0.tgz"
+  integrity sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==
+
 commander@^12.0.0:
   version "12.1.0"
   resolved "https://registry.npmmirror.com/commander/-/commander-12.1.0.tgz"
@@ -3243,10 +3272,33 @@ css-tree@^1.1.3:
     mdn-data "2.0.14"
     source-map "^0.6.1"
 
+css-tree@^3.0.1:
+  version "3.2.1"
+  resolved "https://registry.npmmirror.com/css-tree/-/css-tree-3.2.1.tgz"
+  integrity sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==
+  dependencies:
+    mdn-data "2.27.1"
+    source-map-js "^1.2.1"
+
+css-tree@~2.2.0:
+  version "2.2.1"
+  resolved "https://registry.npmmirror.com/css-tree/-/css-tree-2.2.1.tgz"
+  integrity sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==
+  dependencies:
+    mdn-data "2.0.28"
+    source-map-js "^1.0.1"
+
 css-what@^6.1.0:
   version "6.2.2"
   resolved "https://registry.npmmirror.com/css-what/-/css-what-6.2.2.tgz"
   integrity sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==
+
+csso@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.npmmirror.com/csso/-/csso-5.0.5.tgz"
+  integrity sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==
+  dependencies:
+    css-tree "~2.2.0"
 
 csstype@^3.2.2:
   version "3.2.3"
@@ -5836,6 +5888,16 @@ mdn-data@2.0.14:
   resolved "https://registry.npmmirror.com/mdn-data/-/mdn-data-2.0.14.tgz"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
+mdn-data@2.0.28:
+  version "2.0.28"
+  resolved "https://registry.npmmirror.com/mdn-data/-/mdn-data-2.0.28.tgz"
+  integrity sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==
+
+mdn-data@2.27.1:
+  version "2.27.1"
+  resolved "https://registry.npmmirror.com/mdn-data/-/mdn-data-2.27.1.tgz"
+  integrity sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npmmirror.com/media-typer/-/media-typer-0.3.0.tgz"
@@ -6904,6 +6966,14 @@ react-native-config@^1.5.5:
   resolved "https://registry.npmmirror.com/react-native-config/-/react-native-config-1.6.1.tgz"
   integrity sha512-HvKtxr6/Tq3iMdFx5REYZsjCtPi0RxQOMCs15+DqrUPTNFtWHuEuh+zw7fJp+dmuO79YMfdtlsPWIGTHtaXwjg==
 
+react-native-fs@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.npmmirror.com/react-native-fs/-/react-native-fs-2.20.0.tgz"
+  integrity sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==
+  dependencies:
+    base-64 "^0.1.0"
+    utf8 "^3.0.0"
+
 react-native-image-crop-picker@^0.51.0:
   version "0.51.0"
   resolved "https://registry.npmmirror.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.51.0.tgz"
@@ -6918,6 +6988,11 @@ react-native-is-edge-to-edge@^1.2.1, react-native-is-edge-to-edge@^1.3.1:
   version "1.3.1"
   resolved "https://registry.npmmirror.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.3.1.tgz"
   integrity sha512-NIXU/iT5+ORyCc7p0z2nnlkouYKX425vuU1OEm6bMMtWWR9yvb+Xg5AZmImTKoF9abxCPqrKC3rOZsKzUYgYZA==
+
+react-native-linear-gradient@^2.8.3:
+  version "2.8.3"
+  resolved "https://registry.npmmirror.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
+  integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-pager-view@^8.0.0:
   version "8.0.0"
@@ -6960,6 +7035,26 @@ react-native-share@^12.2.0:
   version "12.2.0"
   resolved "https://registry.npmmirror.com/react-native-share/-/react-native-share-12.2.0.tgz"
   integrity sha512-f6MB9BsKa9xVvu0DKbxq5jw4IyYHqQeqUlCNkD8eAFoJx6SD31ObPAn7SQ6NG9AOuhCy6aYuSJYJvx25DaoMZQ==
+
+react-native-skia-android@147.1.0:
+  version "147.1.0"
+  resolved "https://registry.npmmirror.com/react-native-skia-android/-/react-native-skia-android-147.1.0.tgz"
+  integrity sha512-pWA0M0G74AhjEop0HLCkjWJMup2HJxOmuUjfPt6kSDhYeWKVx8AEzWh0Fh19ah78zE/s4hD0Of0Tyem5shhiTg==
+
+react-native-skia-apple-ios@147.1.0:
+  version "147.1.0"
+  resolved "https://registry.npmmirror.com/react-native-skia-apple-ios/-/react-native-skia-apple-ios-147.1.0.tgz"
+  integrity sha512-cr4rWe4Bf0H0TTutUp5cgHt5/Felttl1bh4BAAAsgAeL2F10FAK9urX8spjUshzMwjqXD7rNOWuFzU6ZcNlGKw==
+
+react-native-skia-apple-macos@147.1.0:
+  version "147.1.0"
+  resolved "https://registry.npmmirror.com/react-native-skia-apple-macos/-/react-native-skia-apple-macos-147.1.0.tgz"
+  integrity sha512-Qbv0Y7LgawtRKuGk8gnGeh8nDWwNiu03LcX0mVaQzBBbxFDYvqejanA+AkO3p8gsQb+fsXRc9DAk+U8cBnzZvA==
+
+react-native-skia-apple-tvos@147.1.0:
+  version "147.1.0"
+  resolved "https://registry.npmmirror.com/react-native-skia-apple-tvos/-/react-native-skia-apple-tvos-147.1.0.tgz"
+  integrity sha512-b+4vILXHPu++t8H41PHLBVsTab2LPqwXNdzgdScyl4+Cu8Ta34aUQW3T469cB0ogAMPdu//KV00w4YVpDZoRUQ==
 
 react-native-svg@^15.15.1:
   version "15.15.1"
@@ -7008,7 +7103,7 @@ react-native-zip-archive@^7.0.2:
   resolved "https://registry.npmmirror.com/react-native-zip-archive/-/react-native-zip-archive-7.0.2.tgz"
   integrity sha512-msCRJMcwH6NVZ2/zoC+1nvA0wlpYRnMxteQywS9nt4BzXn48tZpaVtE519QEZn0xe3ygvgsWx5cdPoE9Jx3bsg==
 
-react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", react-native@>=0.47.0, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.63.3, react-native@0.83.0:
+react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", react-native@>=0.47.0, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.63.3, react-native@>=0.78, react-native@0.83.0:
   version "0.83.0"
   resolved "https://registry.npmmirror.com/react-native/-/react-native-0.83.0.tgz"
   integrity sha512-a8wPjGfkktb1+Mjvzkky3d0u6j6zdWAzftZ2LdQtgRgqkMMfgQxD9S+ri3RNlfAFQpuCAOYUIyrNHiVkUQChxA==
@@ -7049,6 +7144,13 @@ react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", react-native@>=0.47.0, r
     ws "^7.5.10"
     yargs "^17.6.2"
 
+react-reconciler@0.31.0:
+  version "0.31.0"
+  resolved "https://registry.npmmirror.com/react-reconciler/-/react-reconciler-0.31.0.tgz"
+  integrity sha512-7Ob7Z+URmesIsIVRjnLoDGwBEG/tVitidU0nMsqX/eeJaLY89RISO/10ERe0MqmzuKUUB1rmY+h1itMbUHg9BQ==
+  dependencies:
+    scheduler "^0.25.0"
+
 react-refresh@^0.14.0:
   version "0.14.2"
   resolved "https://registry.npmmirror.com/react-refresh/-/react-refresh-0.14.2.tgz"
@@ -7062,7 +7164,7 @@ react-test-renderer@19.2.0:
     react-is "^19.2.0"
     scheduler "^0.27.0"
 
-react@*, "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", react@^19.2.0, "react@>= 18.2.0", react@>=16.8, react@>=16.8.6, react@>=17.0.0, react@>=18.0.0, react@19.2.0:
+react@*, "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", react@^19.0.0, react@^19.2.0, "react@>= 18.2.0", react@>=16.8, react@>=16.8.6, react@>=17.0.0, react@>=18.0.0, react@>=19.0, react@19.2.0:
   version "19.2.0"
   resolved "https://registry.npmmirror.com/react/-/react-19.2.0.tgz"
   integrity sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==
@@ -7315,10 +7417,15 @@ safe-regex-test@^1.0.3:
   resolved "https://registry.npmmirror.com/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sax@>=0.6.0:
+sax@^1.5.0, sax@>=0.6.0:
   version "1.6.0"
   resolved "https://registry.npmmirror.com/sax/-/sax-1.6.0.tgz"
   integrity sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==
+
+scheduler@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.npmmirror.com/scheduler/-/scheduler-0.25.0.tgz"
+  integrity sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==
 
 scheduler@^0.27.0, scheduler@0.27.0:
   version "0.27.0"
@@ -7603,6 +7710,11 @@ slugify@^1.6.6:
   version "1.6.9"
   resolved "https://registry.npmmirror.com/slugify/-/slugify-1.6.9.tgz"
   integrity sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==
+
+source-map-js@^1.0.1, source-map-js@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.2.1.tgz"
+  integrity sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==
 
 source-map-support@~0.5.20:
   version "0.5.21"
@@ -7926,6 +8038,19 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmmirror.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+svgo@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmmirror.com/svgo/-/svgo-4.0.1.tgz"
+  integrity sha512-XDpWUOPC6FEibaLzjfe0ucaV0YrOjYotGJO1WpF0Zd+n6ZGEQUsSugaoLq9QkEZtAfQIxT42UChcssDVPP3+/w==
+  dependencies:
+    commander "^11.1.0"
+    css-select "^5.1.0"
+    css-tree "^3.0.1"
+    css-what "^6.1.0"
+    csso "^5.0.5"
+    picocolors "^1.1.1"
+    sax "^1.5.0"
+
 term-size@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmmirror.com/term-size/-/term-size-1.2.0.tgz"
@@ -8212,6 +8337,11 @@ use-sync-external-store@^1.5.0, use-sync-external-store@>=1.2.0:
   version "1.5.0"
   resolved "https://registry.npmmirror.com/use-sync-external-store/-/use-sync-external-store-1.5.0.tgz"
   integrity sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==
+
+utf8@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/utf8/-/utf8-3.0.0.tgz"
+  integrity sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==
 
 util-deprecate@^1.0.1:
   version "1.0.2"
