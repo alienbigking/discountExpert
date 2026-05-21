@@ -19,7 +19,7 @@ interface EntryCardProps {
 
 const EntryCard: React.FC<EntryCardProps> = ({ entry, onPress }) => {
   return (
-    <View style={[styles.card, { width: CARD_WIDTH }]}>
+    <View style={[styles.card, { width: CARD_WIDTH, maxWidth: CARD_WIDTH }]}>
       <View
         style={[
           styles.topHighlight,
@@ -27,31 +27,35 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, onPress }) => {
         ]}
       />
 
-      <View style={[styles.iconWrap, { backgroundColor: entry.platformColor }]}>
-        <Text style={styles.logoText}>{entry.platformName.charAt(0)}</Text>
-      </View>
-
-      <Text style={[styles.platform, { color: entry.platformColor }]}>
-        {entry.platformName}
-      </Text>
-      <Text style={styles.title} numberOfLines={2}>
-        {entry.title}
-      </Text>
-
-      {entry.tag ? (
+      <View style={styles.cardContent}>
         <View
-          style={[
-            styles.tagWrap,
-            { backgroundColor: entry.platformColor + '20' },
-          ]}
+          style={[styles.iconWrap, { backgroundColor: entry.platformColor }]}
         >
-          <Text style={[styles.tagText, { color: entry.platformColor }]}>
-            {entry.tag}
-          </Text>
+          <Text style={styles.logoText}>{entry.platformName.charAt(0)}</Text>
         </View>
-      ) : (
-        <View style={styles.tagPlaceholder} />
-      )}
+
+        <Text style={[styles.platform, { color: entry.platformColor }]}>
+          {entry.platformName}
+        </Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {entry.title}
+        </Text>
+
+        {entry.tag ? (
+          <View
+            style={[
+              styles.tagWrap,
+              { backgroundColor: entry.platformColor + '20' },
+            ]}
+          >
+            <Text style={[styles.tagText, { color: entry.platformColor }]}>
+              {entry.tag}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.tagPlaceholder} />
+        )}
+      </View>
 
       <TouchableOpacity
         style={[styles.btn, { borderColor: entry.platformColor + '30' }]}
@@ -68,6 +72,7 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
+    flex: 1,
     backgroundColor: 'rgba(255,255,255,0.62)',
     borderRadius: 22,
     paddingHorizontal: 14,
@@ -86,6 +91,9 @@ const styles = StyleSheet.create({
       android: {},
     }),
     overflow: 'hidden',
+  },
+  cardContent: {
+    flex: 1,
   },
   topHighlight: {
     position: 'absolute',

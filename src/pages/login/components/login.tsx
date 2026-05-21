@@ -25,9 +25,11 @@ const Login = () => {
   const setToken = useAuthRouteStore(s => s.setToken)
   const setLoggedIn = useAuthRouteStore(s => s.setLoggedIn)
   const [loginMode, setLoginMode] = useState<'password' | 'code'>('password')
+  // const [phone, setPhone] = useState('')
+  // const [verifyCode, setVerifyCode] = useState('')
   const [username, setUsername] = useState('allen.ouyang')
   const [password, setPassword] = useState('@ouyangWEI6879')
-  const [verifyCode, setVerifyCode] = useState('')
+  // const [verifyCode, setVerifyCode] = useState('')
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -65,7 +67,7 @@ const Login = () => {
         setToken(data?.accessToken)
         console.log('设置后的 store token:', useAuthRouteStore.getState().token)
         setLoggedIn(true)
-        navigation.goBack()
+        navigation.reset({ index: 0, routes: [{ name: 'Main' }] })
         Toast.success('登录成功！')
       } else {
         Toast.error(message)
@@ -96,6 +98,7 @@ const Login = () => {
           <Text style={styles.loginTitle}>登录优惠达人</Text>
           <Text style={styles.loginHint}>� 每天都有优惠等你来拿！</Text>
 
+          {/* 暂时隐藏验证码登录选项，保留代码注释
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[styles.tab, loginMode === 'password' && styles.tabActive]}
@@ -124,6 +127,7 @@ const Login = () => {
               </Text>
             </TouchableOpacity>
           </View>
+          */}
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -135,6 +139,20 @@ const Login = () => {
             />
           </View>
 
+          {/* 暂时隐藏验证码登录，只保留密码登录 */}
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="请输入密码"
+              placeholderTextColor="#999"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
+              keyboardType="default"
+            />
+          </View>
+
+          {/* 验证码登录相关代码暂时隐藏
           {loginMode === 'password' ? (
             <View style={styles.passwordInputContainer}>
               <TextInput
@@ -166,6 +184,7 @@ const Login = () => {
               </View>
             </View>
           )}
+          */}
 
           <TouchableOpacity
             style={styles.loginBtn}
@@ -196,8 +215,8 @@ const Login = () => {
             </Pressable>
             <Text style={styles.agreementText}>
               已阅读并同意
-              <Text style={styles.agreementLink}>《服务条款》</Text>和
-              <Text style={styles.agreementLink}>《隐私权政策》</Text>
+              <Text style={styles.agreementLink}>《用户协议》</Text>和
+              <Text style={styles.agreementLink}>《隐私政策》</Text>
             </Text>
           </View>
         </View>

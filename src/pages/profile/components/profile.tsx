@@ -101,6 +101,30 @@ const Profile: React.FC = () => {
                 <Text style={styles.menuItemText}>❓ 帮助与反馈</Text>
                 <Text style={styles.menuItemArrow}>›</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('AboutApp')}
+              >
+                <Text style={styles.menuItemText}>ℹ️ 关于App</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('FollowAccount')}
+              >
+                <Text style={styles.menuItemText}>📱 关注公众号</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('PrivacyPolicy')}
+              >
+                <Text style={styles.menuItemText}>🔒 隐私政策</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
@@ -136,6 +160,30 @@ const Profile: React.FC = () => {
                 onPress={() => navigation.navigate('HelpFeedback')}
               >
                 <Text style={styles.menuItemText}>❓ 帮助与反馈</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('AboutApp')}
+              >
+                <Text style={styles.menuItemText}>ℹ️ 关于App</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('FollowAccount')}
+              >
+                <Text style={styles.menuItemText}>📱 关注公众号</Text>
+                <Text style={styles.menuItemArrow}>›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('PrivacyPolicy')}
+              >
+                <Text style={styles.menuItemText}>🔒 隐私政策</Text>
                 <Text style={styles.menuItemArrow}>›</Text>
               </TouchableOpacity>
             </View>

@@ -46,7 +46,6 @@ const PlatformFilter: React.FC<PlatformFilterProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
     paddingVertical: 4,
     gap: 8,
     flexDirection: 'row',

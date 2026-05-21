@@ -1,25 +1,28 @@
-import React, { useMemo } from 'react'
-import { FlatList, View, Text, StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import React, { useCallback, useMemo } from 'react'
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { EntryCard } from '@/components/entryCard'
-import type { RootStackParamList } from '@/navigation/appNavigator'
+import { openEntryService } from '../services'
 import type { Entry, PlatformId } from '../types'
 
 interface EntryListProps {
   entries: Entry[]
   selectedPlatform: PlatformId
   searchKeyword: string
+  onShowGuide?: () => void
 }
 
 const EntryList: React.FC<EntryListProps> = ({
   entries,
   selectedPlatform,
   searchKeyword,
+  onShowGuide,
 }) => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-
   const filtered = useMemo(() => {
     return entries.filter(entry => {
       const matchPlatform =
@@ -32,14 +35,9 @@ const EntryList: React.FC<EntryListProps> = ({
     })
   }, [entries, selectedPlatform, searchKeyword])
 
-  const handleOpen = (entry: Entry) => {
-    navigation.navigate('WebViewScreen', {
-      url: entry.webFallback,
-      title: entry.title,
-      deeplink:
-        entry.deeplink !== entry.webFallback ? entry.deeplink : undefined,
-    })
-  }
+  const handleOpen = useCallback((entry: Entry) => {
+    openEntryService.open(entry)
+  }, [])
 
   if (filtered.length === 0) {
     return (
@@ -50,44 +48,77 @@ const EntryList: React.FC<EntryListProps> = ({
   }
 
   return (
-    <FlatList
-      data={filtered}
-      keyExtractor={item => item.id}
-      numColumns={2}
-      columnWrapperStyle={styles.row}
-      ListHeaderComponent={
-        <View style={styles.listHeader}>
-          <Text style={styles.listHeaderTitle}>热门入口</Text>
+    <View style={styles.container}>
+      {/* 固定头部 */}
+      <View style={styles.listHeader}>
+        <Text style={styles.listHeaderTitle}>热门入口</Text>
+        <View style={styles.headerRight}>
+          <TouchableOpacity
+            style={styles.guideBtn}
+            onPress={onShowGuide}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.guideBtnText}>使用指引</Text>
+          </TouchableOpacity>
           <Text style={styles.listHeaderCount}>{filtered.length} 个入口</Text>
         </View>
-      }
-      renderItem={({ item }) => <EntryCard entry={item} onPress={handleOpen} />}
-      contentContainerStyle={styles.list}
-      showsVerticalScrollIndicator={false}
-    />
+      </View>
+
+      <FlatList
+        data={filtered}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        renderItem={({ item }) => (
+          <EntryCard entry={item} onPress={handleOpen} />
+        )}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  list: {
+  container: {
+    flex: 1,
+  },
+  listContent: {
     paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingBottom: 100,
   },
   row: {
     justifyContent: 'space-between',
+    gap: 12,
   },
   listHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
-    paddingHorizontal: 4,
+    paddingHorizontal: 16,
   },
   listHeaderTitle: {
     fontSize: 15,
     fontWeight: '800',
     color: '#1C1C1E',
     letterSpacing: -0.3,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  guideBtn: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  guideBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
   listHeaderCount: {
     fontSize: 12,

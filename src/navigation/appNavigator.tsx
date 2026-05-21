@@ -10,6 +10,9 @@ import EditProfile from '@/pages/profile/components/editProfile'
 import Settings from '@/pages/settings/components/settings'
 import HelpFeedback from '@/pages/helpFeedback/components/helpFeedback'
 import WebViewScreen from '@/pages/webView/components/webView'
+import AboutApp from '@/pages/aboutApp'
+import FollowAccount from '@/pages/followAccount'
+import PrivacyPolicy from '@/pages/privacyPolicy'
 import { useNavigationStore } from '@/navigation/stores'
 import type { UserInfo } from '@/pages/profile/types'
 
@@ -21,6 +24,9 @@ export type RootStackParamList = {
   HelpFeedback: undefined
   EditProfile: { userInfo: UserInfo }
   WebViewScreen: { url: string; title: string; deeplink?: string }
+  AboutApp: undefined
+  FollowAccount: undefined
+  PrivacyPolicy: undefined
 }
 
 export type MainTabParamList = {
@@ -46,12 +52,13 @@ const MainTabNavigator = () => (
       tabBarActiveTintColor: '#E54444',
       tabBarInactiveTintColor: '#999',
       tabBarStyle: {
-        backgroundColor: '#fff',
-        borderTopWidth: 1,
-        borderTopColor: '#f0f0f0',
-        paddingBottom: 8,
-        paddingTop: 8,
-        height: 80,
+        backgroundColor: 'rgba(255,255,255,0.75)',
+        borderTopWidth: 0,
+        elevation: 0,
+        paddingBottom: 4,
+        paddingTop: 4,
+        height: 64,
+        position: 'absolute',
       },
       tabBarLabelStyle: { fontSize: 12, fontWeight: '500' },
       headerShown: false,
@@ -98,6 +105,9 @@ const AppNavigator = () => {
       <Stack.Screen name="HelpFeedback" component={HelpFeedback} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+      <Stack.Screen name="AboutApp" component={AboutApp} />
+      <Stack.Screen name="FollowAccount" component={FollowAccount} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     </Stack.Navigator>
   )
 }

@@ -17,8 +17,8 @@ import LoginBackground from './loginBackground'
 
 const Register = () => {
   const navigation = useNavigation()
-  const [phone, setPhone] = useState('')
-  const [smsCode, setSmsCode] = useState('')
+  // const [phone, setPhone] = useState('')
+  // const [smsCode, setSmsCode] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -68,15 +68,19 @@ const Register = () => {
     const trimmedPhone = phone.trim()
     const trimmedUsername = username.trim()
 
-    if (!trimmedPhone && !trimmedUsername) {
-      Toast.error('手机号和用户名至少填一个')
+    // if (!trimmedPhone && !trimmedUsername) {
+    //   Toast.error('手机号和用户名至少填一个')
+    //   return
+    // }
+    // if (trimmedPhone && !/^1[3-9]\d{9}$/.test(trimmedPhone)) {
+    //   Toast.error('手机号格式不正确')
+    //   return
+    // }
+    if (!trimmedUsername) {
+      Toast.error('请输入用户名')
       return
     }
-    if (trimmedPhone && !/^1[3-9]\d{9}$/.test(trimmedPhone)) {
-      Toast.error('手机号格式不正确')
-      return
-    }
-    if (trimmedUsername && !/^[a-zA-Z0-9_.]{3,20}$/.test(trimmedUsername)) {
+    if (!/^[a-zA-Z0-9_.]{3,20}$/.test(trimmedUsername)) {
       Toast.error('用户名格式不正确（3-20位字母数字下划线点号）')
       return
     }
@@ -93,18 +97,18 @@ const Register = () => {
       return
     }
     if (!agreed) {
-      Toast.error('请同意服务条款和隐私权政策')
+      Toast.error('请同意用户协议和隐私政策')
       return
     }
 
     setLoading(true)
     try {
       const { status, message } = await loginService.register({
-        phone: trimmedPhone || undefined,
+        // phone: trimmedPhone || undefined,
         password,
-        username: trimmedUsername || undefined,
+        username: trimmedUsername,
         nickname: nickname.trim() || undefined,
-        phoneCode: trimmedPhone && smsCode ? smsCode : undefined,
+        // phoneCode: trimmedPhone && smsCode ? smsCode : undefined,
       })
       if (status !== 0) {
         Toast.error(message)
@@ -129,7 +133,7 @@ const Register = () => {
           <Text style={styles.title}>创建账号</Text>
           <Text style={styles.subtitle}>😊 欢迎加入，记录美好每一天</Text>
 
-          {/* 手机号 */}
+          {/* 暂时隐藏手机号和验证码输入框，保留代码注释
           <View style={styles.inputWrap}>
             <TextInput
               style={styles.input}
@@ -142,7 +146,6 @@ const Register = () => {
             />
           </View>
 
-          {/* 短信验证码（有手机号时才显示） */}
           <View style={styles.codeWrap}>
             <TextInput
               style={styles.codeInput}
@@ -172,12 +175,13 @@ const Register = () => {
               )}
             </TouchableOpacity>
           </View>
+          */}
 
           {/* 用户名 */}
           <View style={styles.inputWrap}>
             <TextInput
               style={styles.input}
-              placeholder="用户名（与手机号至少填一个，3-20位字母数字下划线）"
+              placeholder="用户名（3-20位字母数字下划线）"
               placeholderTextColor="#999"
               value={username}
               onChangeText={setUsername}
@@ -246,8 +250,8 @@ const Register = () => {
             </Pressable>
             <Text style={styles.agreementText}>
               已阅读并同意
-              <Text style={styles.agreementLink}>《服务条款》</Text>和
-              <Text style={styles.agreementLink}>《隐私权政策》</Text>
+              <Text style={styles.agreementLink}>《用户协议》</Text>和
+              <Text style={styles.agreementLink}>《隐私政策》</Text>
             </Text>
           </View>
 

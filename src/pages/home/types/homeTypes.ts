@@ -30,10 +30,10 @@ export interface Entry {
   platformColor: string
   title: string
   deeplink: string
-  webFallback: string
   category: EntryCategory
   icon?: string
   tag?: string
+  appScheme?: string
 }
 
 export interface HomeStoreState {

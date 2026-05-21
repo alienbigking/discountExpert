@@ -1,10 +1,21 @@
-import React from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useHomeStore } from '../stores'
 import PlatformFilter from './platformFilter'
 import EntryList from './entryList'
 import HomeBackground from '@/components/homeBackground'
+import GuideModal from '@/components/guideModal'
+import { FaqModal } from '@/components/faqModal'
+
+const GUIDE_SHOWN_KEY = '@guide_shown_v1'
 
 const Home: React.FC = () => {
   const insets = useSafeAreaInsets()
@@ -14,6 +25,24 @@ const Home: React.FC = () => {
   const platforms = useHomeStore(s => s.platforms)
   const setSelectedPlatform = useHomeStore(s => s.setSelectedPlatform)
   const setSearchKeyword = useHomeStore(s => s.setSearchKeyword)
+  const [guideVisible, setGuideVisible] = useState(false)
+  const [faqVisible, setFaqVisible] = useState(false)
+
+  // 首次进入自动显示指引（只显示一次）
+  useEffect(() => {
+    const checkFirstLaunch = async () => {
+      try {
+        const hasShown = await AsyncStorage.getItem(GUIDE_SHOWN_KEY)
+        if (!hasShown) {
+          setGuideVisible(true)
+          await AsyncStorage.setItem(GUIDE_SHOWN_KEY, 'true')
+        }
+      } catch {
+        // 忽略错误
+      }
+    }
+    checkFirstLaunch()
+  }, [])
 
   return (
     <HomeBackground>
@@ -21,6 +50,13 @@ const Home: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>优惠入口</Text>
           <Text style={styles.subtitle}>一键直达官方活动页</Text>
+          <TouchableOpacity
+            style={styles.helpBtn}
+            onPress={() => setFaqVisible(true)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.helpBtnText}>?</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.searchWrapper}>
@@ -47,7 +83,15 @@ const Home: React.FC = () => {
           entries={entries}
           selectedPlatform={selectedPlatform}
           searchKeyword={searchKeyword}
+          onShowGuide={() => setGuideVisible(true)}
         />
+
+        <GuideModal
+          visible={guideVisible}
+          onClose={() => setGuideVisible(false)}
+        />
+
+        <FaqModal visible={faqVisible} onClose={() => setFaqVisible(false)} />
       </View>
     </HomeBackground>
   )
@@ -61,22 +105,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  helpBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
     alignItems: 'center',
   },
+  helpBtnText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
   title: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '800',
     color: '#1A3320',
-    letterSpacing: -0.5,
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 12,
-    color: '#3A5A3A',
-    marginTop: 3,
+    flex: 1,
+    fontSize: 11,
+    color: '#6B8F71',
     fontWeight: '500',
+    textAlign: 'right',
+    marginRight: 10,
   },
   searchWrapper: {
     paddingHorizontal: 16,
@@ -93,6 +154,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.85)',
   },
   filterWrapper: {
+    marginHorizontal: 16,
     marginBottom: 12,
   },
 })
