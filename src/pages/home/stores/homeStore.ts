@@ -11,6 +11,7 @@ const DEFAULT_PLATFORMS: Platform[] = [
   { id: 'didi', name: '滴滴', color: '#F76E1E' },
 ]
 
+/*
 const DEFAULT_ENTRIES: Entry[] = [
   {
     id: 'jd_food_001',
@@ -293,12 +294,18 @@ const DEFAULT_ENTRIES: Entry[] = [
     appScheme: 'didiglobal://',
   },
 ]
+*/
 
 export const useHomeStore = create<HomeStoreState>(set => ({
   selectedPlatform: 'all',
   searchKeyword: '',
   platforms: DEFAULT_PLATFORMS,
-  entries: DEFAULT_ENTRIES,
+  entries: [],
   setSelectedPlatform: platform => set({ selectedPlatform: platform }),
   setSearchKeyword: keyword => set({ searchKeyword: keyword }),
+  setHomeConfig: ({ platforms, entries }) =>
+    set({
+      platforms: platforms?.length ? platforms : DEFAULT_PLATFORMS,
+      entries: entries || [],
+    }),
 }))

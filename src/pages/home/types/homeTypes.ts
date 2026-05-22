@@ -43,6 +43,7 @@ export interface HomeStoreState {
   entries: Entry[]
   setSelectedPlatform: (platform: PlatformId) => void
   setSearchKeyword: (keyword: string) => void
+  setHomeConfig: (config: { platforms?: Platform[]; entries?: Entry[] }) => void
 }
 
 export interface IOpenEntryParams {

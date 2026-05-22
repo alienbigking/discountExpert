@@ -9,6 +9,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useHomeStore } from '../stores'
+import { homeService } from '../services'
 import PlatformFilter from './platformFilter'
 import EntryList from './entryList'
 import HomeBackground from '@/components/homeBackground'
@@ -25,6 +26,7 @@ const Home: React.FC = () => {
   const platforms = useHomeStore(s => s.platforms)
   const setSelectedPlatform = useHomeStore(s => s.setSelectedPlatform)
   const setSearchKeyword = useHomeStore(s => s.setSearchKeyword)
+  const setHomeConfig = useHomeStore(s => s.setHomeConfig)
   const [guideVisible, setGuideVisible] = useState(false)
   const [faqVisible, setFaqVisible] = useState(false)
 
@@ -43,6 +45,14 @@ const Home: React.FC = () => {
     }
     checkFirstLaunch()
   }, [])
+
+  useEffect(() => {
+    homeService.getHomeConfig().then(({ data }) => {
+      if (data) {
+        setHomeConfig(data)
+      }
+    })
+  }, [setHomeConfig])
 
   return (
     <HomeBackground>
